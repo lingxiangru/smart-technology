@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			/* 清除内外边距,方便排版 */
+			* {
+				margin: 0px 0px;
+				padding: 0px;
+			}
+			#container{
+				width: 500px;
+				height: 300px;
+				border: 1px solid #6510AD;
+				margin: 100px auto;
+			}
+			#title{
+				width: 500px;
+				height: 100px;
+				background-image: linear-gradient(120deg, #6510AD, #6510AD, #134CAD);
+				line-height: 100px;
+				text-align: center;
+				color: white;
+				font-size: 30px;
+			}
+			#form{
+				text-align: center;
+			}
+			.STYLE_1{
+				margin-top: 20px;
+			}
+			.STYLE_2{
+				width: 250px;
+				height: 30px;
+				border: 1px solid #6510AD;
+			}
+			#loginButton{
+				width: 250px;
+				height: 30px;
+				border: none;
+				color: white;
+				background-image: linear-gradient(120deg, #6510AD, #6510AD, #134CAD);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="title">智能科技后台登录</div>
+			<div id="form">
+				<form id="loginform">
+					<div class="STYLE_1"><input type="text" name="user" class="STYLE_2" value="" placeholder=" 账号/用户名" /></div>
+					<div class="STYLE_1"><input type="password" name="password" class="STYLE_2" value="" placeholder=" 密码" /></div>
+					<div class="STYLE_1"><input type="submit" value="登录" id="loginButton" /></div>
+				</form>
+			</div>
+		</div>
+		<script src="../home/js/jquery-3.4.1.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("#loginform").submit(function(){
+				if($("input[name=user]").val().trim()==""){
+					alert("请输入账号!");
+					return false;
+				}
+				if($("input[name=password]").val().trim()==""){
+					alert("请输入密码!");
+					return false;
+				}
+				$.post(
+					"/znkj/user?do=login",
+					$("#loginform").serialize(),
+					function(result){
+						if(result=="1"){
+							alert("用户名或密码错误!")
+						}else if(result=="0"){
+							location.href="index.html"
+						}else{
+							alert("运行异常!")
+						}
+					}
+				)
+				return false;
+			});
+		</script>
+		<script src="../home/js/background.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

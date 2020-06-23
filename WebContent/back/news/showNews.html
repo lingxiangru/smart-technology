@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>新闻表</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<table id="news"></table>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table'], function() {
+			var table = layui.table;
+
+			//第一个实例
+			table.render({
+				elem : '#news',
+				url : '/znkj/news?do=getNewsPage&type=新闻', //数据接口
+				page: true, //开启分页
+				cols : [ [ //表头
+				{
+					fixed : 'left',
+					field : 'nid',
+					title : 'ID',
+					width : 60,
+					sort : true
+				}, {
+					field : 'ntitle',
+					title : '标题'
+				}, {
+					field : 'nintr',
+					title : '简介'
+				}, {
+					field : 'ncontent',
+					title : '内容'
+				}, {
+					field : 'nimg',
+					title : '封面'
+				}, {
+					field : 'npublisher',
+					title : '发布人',
+					width : 100
+				}, {
+					field : 'ndate',
+					title : '发布时间',
+					width : 150,
+					sort : true
+				} ] ]
+			});
+
+		});
+	</script>
+</body>
+</html>

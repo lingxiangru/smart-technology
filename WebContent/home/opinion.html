@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>意见箱</title>
+	<link rel="stylesheet" type="text/css" href="/znkj/home/css/index_all.css" />
+	<link rel="stylesheet" type="text/css" href="/znkj/home/css/index_top.css" />
+	<link rel="stylesheet" type="text/css" href="/znkj/home/css/index_content.css" />
+	<link rel="stylesheet" type="text/css" href="/znkj/home/css/index_bottom.css" />
+	<style type="text/css">
+		#content_container {
+			margin: 80px auto;
+			width: 1000px;
+		}
+		
+		#msg{
+			height: 50px;
+		}
+		
+		#msg li{
+			float: left;
+			list-style-type: none;
+			width: 33.3%;
+		}
+		
+		#msg input {
+			margin: 0px 20px;
+			width: 200px;
+			height: 30px;
+		}
+		
+		#loginButton{
+			margin: 0px 400px;
+			width: 200px;
+			height: 50px;
+			border: none;
+			color: white;
+			background-image: linear-gradient(120deg, #6510AD, #6510AD, #134CAD);
+		}
+		
+		#msg_div textarea {
+			margin-left: 20px;
+			width: 868px;
+			height: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<!-- 顶栏 -->
+		<div id="top_bar">
+			<div id="top_bar_left">
+				<a href="index.html"> <img src="/znkj/image/logo.png"
+					width="500">
+				</a>
+			</div>
+			<div id="top_bar_right">
+				<!-- 意见箱 -->
+				<div id="top_bar_option">
+					<a href="">意见箱</a>
+				</div>
+				<!-- 标题菜单 -->
+				<div id="top_bar_menu">
+					<ul id="menuList">
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- 首页图片,可换轮播图 -->
+		<div id="top_main_img">
+			<img src="/znkj/image/main.png" width="100%">
+		</div>
+		<!-- 遮住首页一个角，使其看起来变倾斜 -->
+		<div id="top_bgdecorate" class="bgdecorate"></div>
+
+		<!-- 网页内容 -->
+		<div id="content_container">
+			<h1 style="text-align: center;">意见箱</h1>
+			<h3 style="text-align: center;color: gray;font-weight: normal;margin: 20px auto;">欢迎提出您宝贵的意见,帮助我们改善内容 !</h3>
+			<form id="form">
+				<ul id="msg">
+					<li>姓名：<input type="text" name="name" autocomplete="off" placeholder=" 请输入您的姓名"></li>
+					<li>邮箱：<input type="email" name="email" autocomplete="off" placeholder=" 请输入您邮箱"></li>
+					<li>电话：<input type="tel" name="phone" autocomplete="off" placeholder=" 请输入您的手机号"></li>
+				</ul>
+				<div style="margin: 20px auto;" id="msg_div">
+					内容：<textarea name="content" placeholder=" 留言内容"></textarea>
+				</div>
+				<div>
+					<input type="submit" value="立即提交" id="loginButton" />
+				</div>
+			</form>
+		</div>
+
+		<!-- 底栏 -->
+		<div id="bottom_bar">
+			<div id="copy">
+				<div id="contact">
+					<div id="contact_img">
+						<img src="/znkj/image/logo.png" width="350">
+					</div>
+					<div id="contact_content">
+						<span class="remarks"> 电话: 123-1234-XXXX
+							&nbsp;&nbsp;&nbsp;&nbsp; 邮箱: 2906935779@qq.com </span> <br> <span
+							class="remarks"> 地址: 江西省-南昌市-湾里区-江西软件职业技术学院 </span>
+					</div>
+				</div>
+				<div id="copyrights">
+					<span id="copyrights_content"> 版权所有 © 智能科技
+						&nbsp;&nbsp;&nbsp;&nbsp; 赣ICP备1234123XXX号
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 技术支持: @Jerry </span>
+				</div>
+			</div>
+		</div>
+		<!-- 遮住底栏背景一个角，使其看起来变倾斜 -->
+		<div id="bottom_bgdecorate" class="bgdecorate"></div>
+	</div>
+	<script src="/znkj/home/js/jquery-3.4.1.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$.post(
+				"/znkj/menu",	
+				{"do":"getMenu"},
+				function(result){
+					var map = JSON.parse(result);
+					var menus = map.data;
+					for(var i=0;i<menus.length;i++){
+						var li = $("<li>");
+						var a = $("<a>");
+						a.attr("href",menus[i].mlink);
+						a.text(menus[i].mname);
+						li.append(a);
+						$("#menuList").append(li);
+					}
+					var li = $("<li>");
+					var a = $("<a>");
+					a.attr("href","/znkj/home/index.html");
+					a.text("首页");
+					li.append(a);
+					$("#menuList").append(li);
+				}
+			);
+		});
+		
+		$("#form").submit(function(){
+			var name = $("input[name='name']").val().trim();
+			var email = $("input[name='email']").val().trim();
+			var phone = $("input[name='phone']").val().trim();
+			var content = $("textarea[name='content']").val();
+			var namereg = /^[\u4e00-\u9fa5]{2,6}$/;
+			var emailreg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+			if (name == '') {
+				alert("请输入您的姓名");
+				return false;
+			}
+			if (!namereg.test(name)) {
+				alert("姓名为2~6位中文");
+				return false;
+			}
+			if (email == '') {
+				alert("请输入您的邮箱");
+				return false;
+			}
+			if (!emailreg.test(email)) {
+				alert("邮箱格式不正确");
+				return false;
+			}
+			if (phone == '' || phone.length != 11) {
+				alert("请输入正确的手机号码");
+				return false;
+			}
+			if (content == '') {
+				alert("请输入您的留言内容");
+				return false;
+			}
+			
+			$.post(
+					"/znkj/opinion?do=add",
+					$("#loginform").serialize(),
+					function(result){
+						var flag = JSON.parse(result);
+						if(flag){
+							alert("提交成功!");
+						}else if(result=="0"){
+							alert("提交失败!");
+						}
+					}
+				);
+			return false;
+		});
+		
+	</script>
+	<!-- 动画背景 -->
+	<!-- <script src="/znkj/home/js/background.js" type="text/javascript" charset="utf-8"></script> -->
+</body>
+</html>

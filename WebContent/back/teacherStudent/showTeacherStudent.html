@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>师生信息表</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<table id="teacherStudent"></table>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table'], function() {
+			var table = layui.table;
+
+			//第一个实例
+			table.render({
+				elem : '#teacherStudent',
+				url : '/znkj/teacherStudent?do=getTeacherStudentPage', //数据接口
+				page: true, //开启分页
+				cols : [ [ //表头
+				{
+					fixed : 'left',
+					field : 'tid',
+					title : 'ID',
+					width : 60,
+					sort : true
+				}, {
+					field : 'tname',
+					title : '姓名'
+				}, {
+					field : 'tcontent',
+					title : '介绍'
+				}, {
+					field : 'timg',
+					title : '照片'
+				}, {
+					field : 'ttype',
+					title : '类型',
+				} ] ]
+			});
+
+		});
+	</script>
+</body>
+</html>

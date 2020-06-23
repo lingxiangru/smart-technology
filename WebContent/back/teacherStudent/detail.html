@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>师生详情</title>
+	<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<form class="layui-form layui-form-pane" lay-filter="teacherStudentDetail">
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-block">
+				<input name="name" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">类型</label>
+			<div class="layui-input-block">
+				<input name="type" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">师生照片</label>
+			<div class="layui-input-block">
+				<img id="photo" width="100px">
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">介绍</label>
+			<div class="layui-input-block">
+				<div id="content"></div>
+			</div>
+		</div>
+
+	</form>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"	charset="utf-8"></script>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script type="text/javascript">
+		layui.use('form', function() {
+			var form = layui.form;
+			$(function(){
+				$.post(
+						"/znkj/teacherStudent",
+						{"do":"getDetail"},
+						function(result){
+							var ts = JSON.parse(result);
+							form.val("teacherStudentDetail", {
+							  "id": ts.tid
+							  ,"name": ts.tname
+							  ,"type": ts.ttype
+							});
+							$("#content").html(ts.tcontent);
+							$("#photo").attr("src",ts.timg);
+						}
+				);
+			});
+		});
+	</script>
+</body>
+</html>

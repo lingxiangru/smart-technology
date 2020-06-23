@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑用户信息</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+	<form class="layui-form" lay-filter="userEdit">
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">用户名</label>
+			<div class="layui-input-block">
+				<input type="text" lay-verify="required" name="name"
+					placeholder="请输入用户名称" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">密码</label>
+			<div class="layui-input-block">
+				<input type="text" lay-verify="required" name="pwd"
+					placeholder="请输入密码" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">权限</label>
+			<div class="layui-input-block">
+				<div id="authority"></div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="submit">修改</button>
+				<button type="button" class="layui-btn layui-btn-primary"
+					onclick="javascript:window.history.back(-1);">返回</button>
+			</div>
+		</div>
+	</form>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script>
+		layui.use([ 'form', 'layer', 'tree' ], function() {
+			var form = layui.form;
+			var layer = layui.layer;
+			var tree = layui.tree;
+			form.on('submit(submit)', function(data) {
+				var formdata = form.val("userEdit");
+				$.post("/znkj/user?do=alter", {
+					"data" : JSON.stringify(formdata)
+				}, function(result) {
+					var flag = JSON.parse(result);
+					if (flag) {
+						alert("修改成功!");
+						location.href = "showUser.html";
+					} else {
+						layer.msg("修改失败!");
+					}
+				});
+				return false;
+			});
+
+			$(function() {
+				$.post("/znkj/user", {
+					"do" : "getEdit"
+				}, function(result) {
+					var user = JSON.parse(result);
+					form.val("userEdit", {
+						"id" : user.uid,
+						"name" : user.uname,
+						"pwd" : user.upwd
+					});
+					/* 获取用户权限信息 */
+					$.post("/znkj/authority", {
+						"do" : "getUserAuthority",
+						"id" : user.uid
+					}, function(result) {
+						//渲染
+						var authority = tree.render({
+							elem : '#authority',
+							data : result,
+							showCheckbox : true,
+							oncheck : function(obj) {
+								var datacheck = obj.data.checked;
+								var domcheck = obj.checked;
+								var children = obj.data.children;
+								if (domcheck) {
+									if (!datacheck) {
+										$.post("/znkj/permissionsTable?do=add",
+												{
+													"uid" : user.uid,
+													"aid" : obj.data.aid
+												}, function(result) {
+													if (!result) {
+														alert("运行异常");
+													}
+												});
+									}
+								} else {
+									$.post("/znkj/permissionsTable?do=del", {
+										"uid" : user.uid,
+										"aid" : obj.data.aid
+									}, function(result) {
+										if (!result) {
+											alert("运行异常");
+										}
+									});
+								}
+							}
+						});
+					});
+				});
+			});
+		});
+	</script>
+</body>
+</html>

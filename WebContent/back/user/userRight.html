@@ -1,0 +1,82 @@
+<!-- 项目测试页面 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>用户权限</title>
+	<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+	<div id="authority"></div>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script src="/znkj/home/js/jquery-3.4.1.js"></script>
+	<script>
+		function getQueryVariable(variable)
+		{
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable){return pair[1];}
+	       }
+	       return(false);
+		}
+	
+	  layui.use('tree', function(){
+	    var tree = layui.tree;
+	    var uid = getQueryVariable("uid");
+	    /* 获取用户权限信息 */
+	   $.post(
+			   "/znkj/authority",
+			   {
+				   "do":"getUserAuthority",
+				   "id":uid
+			   },
+			   function(result){
+				   //渲染
+				    var authority = tree.render({
+				    	elem: '#authority'  //绑定元素
+				    	,data: result
+				    	,showCheckbox:true
+				    	,oncheck: function(obj){
+				    		var datacheck = obj.data.checked;
+				    		var domcheck = obj.checked;
+				    		var children = obj.data.children;
+						     if(domcheck){
+						    	 if(!datacheck){
+						    	 	$.post(
+						  	 			"/znkj/permissionsTable?do=add",
+						  	 			{
+						  	 				"uid":uid,
+						  	 				"aid":obj.data.aid
+						  	 			},
+						  	 			function(result){
+						  	 				if(!result){
+						  	 					alert("运行异常");
+						  	 				}
+						  	 			}
+						  	 	);
+						    	 }
+						     }else{
+						    	 $.post(
+						  	 			"/znkj/permissionsTable?do=del",
+						  	 			{
+						  	 				"uid":uid,
+						  	 				"aid":obj.data.aid
+						  	 			},
+						  	 			function(result){
+						  	 				if(!result){
+						  	 					alert("运行异常");
+						  	 				}
+						  	 			}
+						  	 	);
+						     }
+						   }
+				    });
+			   }
+			);
+		});
+	  
+  </script>
+</body>
+</html>

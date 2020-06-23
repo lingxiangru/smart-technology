@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>新闻详情</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<form class="layui-form layui-form-pane" lay-filter="newsDetail">
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">标题</label>
+			<div class="layui-input-block">
+				<input name="title" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">类型</label>
+			<div class="layui-input-block">
+				<input name="type" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">发布人</label>
+			<div class="layui-input-block">
+				<input name="publisher" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">发布时间</label>
+			<div class="layui-input-block">
+				<input name="date" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">封面</label>
+			<div class="layui-input-block">
+				<img id="cover" width="100px">
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">简介</label>
+			<div class="layui-input-block">
+				<textarea name="intr" class="layui-textarea" readonly="readonly"></textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">内容</label>
+			<div class="layui-input-block">
+				<div id="content"></div>
+			</div>
+		</div>
+
+	</form>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"	charset="utf-8"></script>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script type="text/javascript">
+		layui.use('form', function() {
+			var form = layui.form;
+			$(function(){
+				$.post(
+						"/znkj/news",
+						{"do":"getDetail"},
+						function(result){
+							var news = JSON.parse(result);
+							form.val("newsDetail", {
+							  "id": news.nid
+							  ,"title": news.ntitle
+							  ,"date":news.ndate
+							  ,"type": news.ntype
+							  ,"publisher": news.npublisher
+							  ,"intr":news.nintr
+							});
+							$("#content").html(news.ncontent);
+							$("#cover").attr("src",news.nimg);
+						}
+				);
+			});
+		});
+	</script>
+</body>
+</html>

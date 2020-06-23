@@ -1,0 +1,45 @@
+/* 清除内外边距,方便排版 */
+* {
+	margin: 0px 0px;
+	padding: 0px;
+}
+
+body{
+	background-color: #E7EAEA;
+	-webkit-font-smoothing: antialiased;
+}
+
+a{
+	text-decoration: none;
+}
+
+/* 使网页缩放布局不变 */
+#main {
+	width: 1518px;
+	margin: 0px auto;
+	position: relative;
+}
+
+.bgdecorate{
+	width: 100%;
+	height: 165px;
+	background: linear-gradient(
+		-3deg, 
+		transparent 0,
+		transparent 32%,
+		rgb(231,234,234) 33%,
+		rgb(231,234,234) 67%,
+		transparent 68%,
+		transparent 100%
+	  );
+}
+
+#top_bgdecorate{
+	position: absolute;
+	top: 490px;
+}
+
+#bottom_bgdecorate{
+	position: absolute;
+	bottom: 415px;
+}

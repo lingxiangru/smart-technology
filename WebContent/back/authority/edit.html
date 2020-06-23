@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑权限</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+	<form class="layui-form" lay-filter="authorityEdit">
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">权限名称</label>
+			<div class="layui-input-block">
+				<input type="text" lay-verify="required" name="authority" placeholder="请输入权限名称" autocomplete="off"
+					class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">父权限ID</label>
+			<div class="layui-input-block">
+				<input type="text" lay-verify="required" name="parentid" placeholder="请输入父权限ID" autocomplete="off"
+					class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">链接页面</label>
+			<div class="layui-input-block">
+				<input type="text" lay-verify="required" name="location" placeholder="请输入链接页面" autocomplete="off"
+					class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="submit">修改</button>
+				<button type="button" class="layui-btn layui-btn-primary" onclick="javascript:window.history.back(-1);">返回</button>
+			</div>
+		</div>
+	</form>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script>
+		layui.use(['form','layer'], function() {
+			var form = layui.form;
+			var layer = layui.layer;
+			form.on('submit(submit)', function(data) {
+				var formdata = form.val("authorityEdit");
+				$.post(
+					"/znkj/authority?do=alter",
+					{
+						"data":JSON.stringify(formdata)
+					},
+					function(result){
+						var flag = JSON.parse(result);
+						if(flag){
+							alert("修改成功!");
+							location.href = "showAuthority.html";
+						}else{
+							layer.msg("修改失败!");
+						}
+					}
+				);
+				return false;
+			});
+			
+			$(function(){
+				$.post(
+					"/znkj/authority",
+					{"do":"getEdit"},
+					function(result){
+						var authority = JSON.parse(result);
+						form.val("authorityEdit", {
+						  "id": authority.aid
+						  ,"authority": authority.aauthority
+						  ,"parentid": authority.aparentid
+						  ,"location": authority.alocation
+						});
+					}
+				);
+			});
+		});
+	</script>
+</body>
+</html>

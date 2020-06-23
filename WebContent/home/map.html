@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style type="text/css">
+			body,
+			html,
+			#allmap {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+				font-family: "微软雅黑";
+			}
+		</style>
+		<script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=kb5Nb1agnXiiG9RbO6vXxihAF9ubcIb5"></script>
+		<title>江西软件职业技术大学</title>
+	</head>
+	<body>
+		<div id="allmap"></div>
+	</body>
+</html>
+<script type="text/javascript">
+	// GL版命名空间为BMapGL
+	// 按住鼠标右键，修改倾斜角和角度
+	var map = new BMapGL.Map("allmap"); // 创建Map实例
+	var point = new BMapGL.Point(116.331398, 39.897445);
+	var myGeo = new BMapGL.Geocoder();
+	// 将地址解析结果显示在地图上,并调整地图视野
+	myGeo.getPoint("江西软件职业技术大学", function(point) {
+		if (point) {
+			map.centerAndZoom(point, 19);
+			map.addOverlay(new BMapGL.Marker(point));
+		} else {
+			alert("您选择地址没有解析到结果!");
+		}
+	}, "南昌市");
+
+	map.addEventListener("click", function(e) {
+		var pt = e.point;
+		alert('您的位置：'+pt.lng+','+pt.lat);
+		// myGeo.getLocation(pt, function(rs) {
+		// 	var addComp = rs.addressComponents;
+		// 	alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+		// });
+	});
+
+	map.centerAndZoom(new BMapGL.Point(116.280190, 40.049191), 19); // 初始化地图,设置中心点坐标和地图级别
+	map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+	map.setHeading(64.5);
+	map.setTilt(73);
+</script>

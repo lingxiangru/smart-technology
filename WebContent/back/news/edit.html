@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑新闻</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<form class="layui-form layui-form-pane" lay-filter="newsEdit" action="/znkj/news?do=alter" method="post">
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">标题</label>
+			<div class="layui-input-block">
+				<input type="text" name="title" required lay-verify="required"
+					placeholder="请输入标题" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">类型</label>
+			<div class="layui-input-block">
+				<select name="type" lay-verify="required">
+					<option value=""></option>
+					<option value="新闻">新闻</option>
+					<option value="公告">公告</option>
+					<option value="概况">学院概况</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">发布人</label>
+			<div class="layui-input-block">
+				<input type="text" name="publisher" required lay-verify="required"
+					placeholder="请输入发布人名称" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">封面</label>
+			<div class="layui-input-block">
+				<div class="layui-upload">
+				  <button type="button" class="layui-btn" id="newsCover"><i class="layui-icon">&#xe67c;</i>上传图片</button>
+				  <div class="layui-upload-list">
+				    <img class="layui-upload-img" id="cover" width="200px">
+				    <input  id="imgPath" name="cover" type="hidden">
+				  </div>
+				</div> 
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">简介</label>
+			<div class="layui-input-block">
+				<textarea name="intr" required lay-verify="required" placeholder="请输入"
+					class="layui-textarea"></textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">内容</label>
+			<div class="layui-input-block">
+				<div id="editor"></div>
+				<textarea name="content"
+					style="width: 100%; height: 200px; display: none;"></textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button type="submit" class="layui-btn" lay-submit="">修改</button>
+				<button type="button" class="layui-btn layui-btn-primary" onclick="javascript:window.history.back(-1);">返回</button>
+			</div>
+		</div>
+
+	</form>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"	charset="utf-8"></script>
+	<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+	<script type="text/javascript"	src="/znkj/back/js/wangEditor.js"></script>
+	<script type="text/javascript">
+		var E = window.wangEditor
+		var editor = new E('#editor')
+		var $content = $('[name=content]')
+		editor.customConfig.onchange = function(html) {
+			// 监控变化，同步更新到 textarea
+			$content.val(html)
+		}
+		editor.customConfig.uploadImgMaxLength = 5
+		editor.customConfig.uploadImgServer = '/znkj/uploadimg'
+		editor.customConfig.zIndex = 1
+		editor.create()
+	</script>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use(['form','upload'], function() {
+			var form = layui.form;
+			var upload = layui.upload;
+			   
+			  //执行实例
+			  var uploadInst = upload.render({
+			    elem: '#newsCover' //绑定元素
+			    ,url: '/znkj/uploadimg' //上传接口
+			    ,done: function(res){
+			      //上传完毕回调
+			      $("#cover").attr("src",res.data[0]);
+			      $("#cover").attr("width","100px");
+			      $("#imgPath").val(res.data[0]);
+			    }
+			    ,error: function(){
+			      //请求异常回调
+			      alert('请求异常!');
+			    }
+			  });
+
+		});
+	</script>
+	<script type="text/javascript">
+		layui.use('form', function() {
+			var form = layui.form;
+			$(function(){
+				$.post(
+						"/znkj/news",
+						{"do":"getEdit"},
+						function(result){
+							var news = JSON.parse(result);
+							form.val("newsEdit", {
+							  "id": news.nid
+							  ,"title": news.ntitle
+							  ,"type": news.ntype
+							  ,"publisher": news.npublisher
+							  ,"cover": news.nimg
+							  ,"intr":news.nintr
+							  ,"content":news.ncontent
+							});
+							editor.txt.html(news.ncontent);
+							$("#cover").attr("src",news.nimg);
+						}
+				);
+			});
+		});
+	</script>
+</body>
+</html>

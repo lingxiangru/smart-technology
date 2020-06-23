@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>首页标题</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<table id="menu"></table>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table'], function() {
+			var table = layui.table;
+
+			//第一个实例
+			table.render({
+				elem : '#menu',
+				url : '/znkj/menu?do=getMenu', //数据接口
+				cols : [ [ //表头
+				{
+					field : 'mid',
+					title : 'ID',
+					width : 60,
+					sort : true
+				}, {
+					field : 'mname',
+					title : '标题'
+				}, {
+					field : 'mlink',
+					title : '链接页面'
+				} ] ]
+			});
+
+		});
+	</script>
+</body>
+</html>

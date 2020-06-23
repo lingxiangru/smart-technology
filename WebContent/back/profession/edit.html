@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑专业介绍</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<form class="layui-form layui-form-pane" lay-filter="professionEdit">
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">ID</label>
+			<div class="layui-input-block">
+				<input name="id" readonly="readonly" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">专业名称</label>
+			<div class="layui-input-block">
+				<input type="text" name="name" required lay-verify="required"
+					placeholder="请输入专业名称" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+
+		<div class="layui-form-item" pane>
+			<label class="layui-form-label">封面</label>
+			<div class="layui-input-block">
+				<div class="layui-upload">
+				  <button type="button" class="layui-btn" id="upcover"><i class="layui-icon">&#xe67c;</i>上传图片</button>
+				  <div class="layui-upload-list">
+				    <img class="layui-upload-img" id="cover">
+				    <input type="hidden" id="imgPath" name="cover">
+				  </div>
+				</div> 
+			</div>
+		</div>
+
+		<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">专业介绍</label>
+			<div class="layui-input-block">
+				<div id="editor"></div>
+				<textarea name="content"
+					style="width: 100%; height: 200px; display: none;"></textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button type="submit" class="layui-btn" lay-submit="" lay-filter="alterProfession">修改</button>
+				<button type="button" class="layui-btn layui-btn-primary" onclick="javascript:window.history.back(-1);">返回</button>
+			</div>
+		</div>
+
+	</form>
+	<script src="/znkj/home/js/jquery-3.4.1.js" type="text/javascript"	charset="utf-8"></script>
+	<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+	<script type="text/javascript"	src="/znkj/back/js/wangEditor.js"></script>
+	<script type="text/javascript">
+		var E = window.wangEditor
+		var editor = new E('#editor')
+		var $content = $('[name=content]')
+		editor.customConfig.onchange = function(html) {
+			// 监控变化，同步更新到 textarea
+			$content.val(html)
+		}
+		editor.customConfig.uploadImgMaxLength = 5
+		editor.customConfig.uploadImgServer = '/znkj/uploadimg'
+		editor.customConfig.zIndex = 1
+		editor.create()
+	</script>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use(['form','upload'], function() {
+			var form = layui.form;
+			var upload = layui.upload;
+			   
+			  //执行实例
+			  var uploadInst = upload.render({
+			    elem: '#upcover' //绑定元素
+			    ,url: '/znkj/uploadimg' //上传接口
+			    ,done: function(res){
+			      //上传完毕回调
+			      $("#cover").attr("src",res.data[0]);
+			      $("#cover").attr("width","100px");
+			      $("#imgPath").val(res.data[0]);
+			    }
+			    ,error: function(){
+			      //请求异常回调
+			      alert('请求异常!');
+			    }
+			  });
+			  
+			  form.on('submit(alterProfession)', function(data){
+				  var data = form.val("professionEdit");
+				  $.post(
+						 "/znkj/profession?do=alter",
+						{
+							 "id":data.id,
+							 "name":data.name,
+							 "cover":data.cover,
+							 "content":data.content
+						},
+						function(result){
+							var flag = JSON.stringify(result);
+							if(flag){
+								alert("修改成功!");
+								location.href = "detail.html";
+							}else{
+								layer.msg("修改失败!");
+							}
+						}
+				  );
+				  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+				});
+			  
+			  $(function(){
+					$.post(
+							"/znkj/profession",
+							{"do":"getEdit"},
+							function(result){
+								var p = JSON.parse(result);
+								form.val("professionEdit", {
+								  "id": p.pid
+								  ,"name": p.pname
+								  ,"cover":p.pimg
+								});
+								editor.txt.html(p.pcontent);
+								$("#cover").attr("src",p.pimg);
+							}
+					);
+				});
+
+		});
+	</script>
+</body>
+</html>

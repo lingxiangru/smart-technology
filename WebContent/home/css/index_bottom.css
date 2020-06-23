@@ -1,0 +1,50 @@
+#bottom_bar {
+	height: 500px;
+	background-repeat: no-repeat;
+	/* background-image: url(../../image/bottom_background.png);
+	background-position-y: -300px; */
+	background-image: url(/znkj/image/footer.jpg);
+	background-position-y: -80px;
+	position: relative;
+}
+
+#copy {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	height: 212px;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+#contact {
+	width: 1400px;
+	height: 80px;
+	margin: 30px auto;
+}
+
+#contact_img {
+	width: 400px;
+	float: left;
+}
+
+#contact_content {
+	float: left;
+	color: #9B999E;
+	font-size: 14px;
+}
+
+.remarks {
+	line-height: 35px;
+}
+
+#copyrights {
+	width: 1400px;
+	margin: 20px auto;
+	border-top: 1px solid #474452;
+	color: #9B999E;
+	font-size: 12px;
+}
+
+#copyrights_content {
+	line-height: 50px;
+}

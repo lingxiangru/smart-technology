@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>查看用户</title>
+<link rel="stylesheet" href="/znkj/back/layui/css/layui.css" media="all">
+</head>
+<body>
+
+	<table id="user"></table>
+	<script src="/znkj/back/layui/layui.js"></script>
+	<script>
+		layui.use([ 'table'], function() {
+			var table = layui.table;
+
+			//第一个实例
+			table.render({
+				elem : '#user',
+				url : '/znkj/user?do=showUser', //数据接口
+				cols : [ [ //表头
+				{
+					field : 'uid',
+					title : 'ID',
+					width : 60,
+					sort : true
+				}, {
+					field : 'uname',
+					title : '用户名'
+				}, {
+					field : 'upwd',
+					title : '密码'
+				} ] ]
+			});
+
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>更多新闻</title>
+<link rel="stylesheet" type="text/css"
+	href="/znkj/home/css/index_all.css" />
+<link rel="stylesheet" type="text/css"
+	href="/znkj/home/css/index_top.css" />
+<link rel="stylesheet" type="text/css"
+	href="/znkj/home/css/index_content.css" />
+<link rel="stylesheet" type="text/css"
+	href="/znkj/home/css/index_bottom.css" />
+	<style type="text/css">
+	#content_container{
+		width: 1400px;
+		margin: 0px auto 100px auto;
+		position: relative;
+	}
+	/* 清除父标签浮动,自适应高度 */
+	#content_container:after {
+		content: "";
+        display: block;
+        clear:both;
+        visibility: hidden;
+	}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<!-- 顶栏 -->
+		<div id="top_bar">
+			<div id="top_bar_left">
+				<a href="index.html"> <img src="/znkj/image/logo.png"
+					width="500">
+				</a>
+			</div>
+			<div id="top_bar_right">
+				<!-- 意见箱 -->
+				<div id="top_bar_option">
+					<a href="/znkj/home/opinion.html">意见箱</a>
+				</div>
+				<!-- 标题菜单 -->
+				<div id="top_bar_menu">
+					<ul id="menuList">
+						<!-- <li><a href="" >首页</a></li>
+							<li><a href="" >新闻公告</a></li>
+							<li><a href="" >名师风采</a></li>
+							<li><a href="" >就业明星</a></li> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- 首页图片,可换轮播图 -->
+		<div id="top_main_img">
+			<img src="/znkj/image/news_background.jpg" width="100%">
+		</div>
+		<!-- 遮住首页一个角，使其看起来变倾斜 -->
+		<div id="top_bgdecorate" class="bgdecorate"></div>
+
+		<!-- 网页内容 -->
+		<div id="content_container">
+
+			<!-- 更多新闻 -->
+			<h1 class="synopsis_title">更多新闻</h1>
+
+			<!-- 新闻热点 -->
+			<!-- <div class="content_inner">
+				<div class="content_inner_style2">
+					<div class="style2_title">
+						<span class="style2_title_block"> 新闻热点 </span>
+					</div>
+					<a href="" class="newsId"> <input type="hidden">
+						<h3 class="style2_title_text" id="newsTitle"></h3>
+					</a>
+					<p class="style2_content_text" id="newsIntr"></p>
+					<div id="news_more">
+						<a href="" class="newsId">查看</a>
+					</div>
+				</div>
+				<div class="style2_img">
+					<a href="" class="newsId"> <img src="" width="520" height="335"
+						id="newsCover">
+					</a>
+				</div>
+			</div> -->
+
+		</div>
+
+		<!-- 底栏 -->
+		<div id="bottom_bar">
+			<div id="copy">
+				<div id="contact">
+					<div id="contact_img">
+						<img src="/znkj/image/logo.png" width="350">
+					</div>
+					<div id="contact_content">
+						<span class="remarks"> 电话: 123-1234-XXXX
+							&nbsp;&nbsp;&nbsp;&nbsp; 邮箱: 2906935779@qq.com </span> <br> <span
+							class="remarks"> 地址: 江西省-南昌市-湾里区-江西软件职业技术学院 </span>
+					</div>
+				</div>
+				<div id="copyrights">
+					<span id="copyrights_content"> 版权所有 © 智能科技
+						&nbsp;&nbsp;&nbsp;&nbsp; 赣ICP备1234123XXX号
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 技术支持: @Jerry </span>
+				</div>
+			</div>
+		</div>
+		<!-- 遮住底栏背景一个角，使其看起来变倾斜 -->
+		<div id="bottom_bgdecorate" class="bgdecorate"></div>
+	</div>
+	<script src="/znkj/home/js/jquery-3.4.1.js"></script>
+	<script type="text/javascript">
+			$(function(){
+				$.post(
+					"/znkj/menu",	
+					{"do":"getMenu"},
+					function(result){
+						var map = JSON.parse(result);
+						var menus = map.data;
+						for(var i=0;i<menus.length;i++){
+							var li = $("<li>");
+							var a = $("<a>");
+							a.attr("href",menus[i].mlink);
+							a.text(menus[i].mname);
+							li.append(a);
+							$("#menuList").append(li);
+						}
+						var li = $("<li>");
+						var a = $("<a>");
+						a.attr("href","/znkj/home/index.html");
+						a.text("首页");
+						li.append(a);
+						$("#menuList").append(li);
+					}
+				);
+				
+				$.post(
+					"/znkj/news",
+					{"do":"getNew"},
+					function(result){
+						var news = JSON.parse(result);
+						var container = $("#content_container");
+						for(var i=0;i<news.length;i++){
+							if(i%2==0){
+								var div = $("<div>");
+								div.addClass("content_inner");
+								div.html(
+									"<div class='content_inner_style2'>"+
+										"<div class='style2_title'>"+
+											"<span class='style2_title_block'> 新闻热点 </span>"+
+										"</div>"+
+										"<a href='/znkj/news?do=details&id="+news[i].nid+"'>"+
+											"<h3 class='style2_title_text'>"+news[i].ntitle+"</h3>"+
+										"</a>"+
+										"<p class='style2_content_text'>"+news[i].nintr+"</p>"+
+										"<div id='news_more'>"+
+											"<a href='/znkj/news?do=details&id="+news[i].nid+"'>查看</a>"+
+										"</div>"+
+									"</div>"+
+									"<div class='style2_img'>"+
+										"<a href='/znkj/news?do=details&id="+news[i].nid+"'>"+
+											"<img src='"+news[i].nimg+"' width='520' height='335'></a>"+
+									"</div>"
+								);
+								container.append(div);
+							}else{
+								var div = $("<div>");
+								div.addClass("content_inner");
+								div.html(
+									"<div class='content_inner_style1'>"+
+										"<div class='style1_title'>"+
+											"<span class='style1_title_block'> 新闻热点 </span>"+
+										"</div>"+
+										"<a href='/znkj/news?do=details&id="+news[i].nid+"'>"+
+											"<h3 class='style1_title_text'>"+news[i].ntitle+"</h3>"+
+										"</a>"+
+										"<p class='style1_content_text'>"+news[i].nintr+"</p>"+
+										"<div id='news_more'>"+
+											"<a href='/znkj/news?do=details&id="+news[i].nid+"'>查看</a>"+
+										"</div>"+
+									"</div>"+
+									"<div class='style1_img'>"+
+										"<a href='/znkj/news?do=details&id="+news[i].nid+"'>"+
+											"<img src='"+news[i].nimg+"' width='520' height='335'></a>"+
+									"</div>"
+								);
+								container.append(div);
+							}
+						}
+					}
+				);
+				
+			});
+		</script>
+	<!-- 动画背景 -->
+	<!-- <script src="/znkj/home/js/background.js" type="text/javascript" charset="utf-8"></script> -->
+</body>
+</html>
